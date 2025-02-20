@@ -14,11 +14,13 @@ body {
 }
 
 .main {
+    display: flex;
+    flex-direction: column;
     flex: 1;
 }
 
 .bg-dark {
-    background-color: #12002b;
+    background-color: lightgray;
 }
 
 .sr-only {
@@ -61,6 +63,14 @@ body {
 
 .main-nav-item:hover {
     text-decoration: underline;
+}
+
+.logout-button {
+    border: none;
+    font-size: 17px;
+    font-weight: bold;
+    background-color: white;
+    color: #2c3e50;
 }
 
 .main-nav-logo {
@@ -215,6 +225,10 @@ body {
 .footer-text {
     margin: 0;
     padding: 0;
+}
+
+.header-title {
+    color: #2c3e50;
 }
 
 .account {
