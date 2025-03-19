@@ -1,9 +1,27 @@
+import { useDispatch, useSelector } from "react-redux"
 import { Account } from "../../Components/Account.jsx"
 import { Footer } from "../../Components/Footer/Footer.jsx"
 import { Header } from "../../Components/Header.jsx"
 import { Navigation } from "../../Components/Navigation/Navigation.jsx"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
+import { logout } from "../../Components/Store/authSlice.js"
 
 export const Profile = () => {
+    const { isAuthenticated } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            dispatch(logout())
+            navigate("/sign-in");
+
+        }
+    }, [isAuthenticated, dispatch, navigate])
+
+    if (!isAuthenticated) return null
+
     return (
         <>
             <Navigation />
