@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Store/authSlice.js";
 
 export const Navigation = () => {
-    const { isAuthenticated } = useSelector((state) => state.auth);
-    const dispatch = useDispatch();
+    const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleLogout = () => {
@@ -21,7 +21,7 @@ export const Navigation = () => {
             {isAuthenticated ? (
                 <div>
                     <Link className="main-nav-item" to="/profile">
-                        <i className="fa fa-user-circle"></i>  Tony
+                        <i className="fa fa-user-circle"></i> {user?.firstName}
                     </Link>
                     <button className="main-nav-item logout-button" onClick={handleLogout}>
                         <i className="fa fa-sign-out"></i> Sign Out
