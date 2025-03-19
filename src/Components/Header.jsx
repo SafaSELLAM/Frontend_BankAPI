@@ -1,14 +1,23 @@
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setUser, updateUser } from "../Components/Store/authSlice.js"
+import { useNavigate } from "react-router-dom"
+import { logout } from "../Components/Store/authSlice.js"
+
 export const Header = () => {
     const { user, token } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const [isEditing, setIsEditing] = useState(false)
     const [firstName, setFirstName] = useState(user?.firstName)
     const [lastName, setLastName] = useState(user?.lastName)
 
+
+    const handleLogout = () => {
+        dispatch(logout())
+        navigate("/sign-in");
+    }
     const fetchUserProfile = async (token) => {
         const response = await fetch("http://localhost:3001/api/v1/user/profile", {
             method: "GET",
@@ -39,6 +48,12 @@ export const Header = () => {
         }
     }, [token, user]);
 
+    useEffect(() => {
+        if (user) {
+            setFirstName(user.firstName);
+            setLastName(user.lastName);
+        }
+    }, [user]);
 
     const handleEditClick = () => setIsEditing(true);
     const handleCancel = () => {
@@ -59,7 +74,7 @@ export const Header = () => {
                 body: JSON.stringify({ firstName, lastName }),
             });
             if (response.status === 401) {
-                dispatch(logout());
+                handleLogout()
                 alert("Votre session a expiré. Veuillez vous reconnecter.");
                 return;
             }
@@ -82,13 +97,13 @@ export const Header = () => {
                 <>
                     <h1 className="header-title">Welcome back</h1>
                     <div className="input-container">
-                        <input
+                        <input className="name-input"
                             type="text"
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             placeholder="First Name"
                         />
-                        <input
+                        <input className="name-input"
                             type="text"
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
@@ -96,10 +111,10 @@ export const Header = () => {
                         />
                     </div>
                     <div className="buttons">
-                        <button className="save-button" onClick={handleSave}>
+                        <button className="edit-button edited" onClick={handleSave}>
                             Save
                         </button>
-                        <button className="cancel-button" onClick={handleCancel}>
+                        <button className="edit-button edited" onClick={handleCancel}>
                             Cancel
                         </button>
                     </div>
