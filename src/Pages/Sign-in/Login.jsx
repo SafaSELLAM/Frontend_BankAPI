@@ -1,16 +1,25 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Footer } from "../../Components/Footer/Footer.jsx"
 import { Navigation } from "../../Components/Navigation/Navigation.jsx"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { loginSuccess, setUser } from "../../Components/Store/authSlice.js"
 
 export const Login = () => {
 
+
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [errorMessage, setErrorMessage] = useState("")
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { isAuthenticated } = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/profile")
+        }
+    }, [isAuthenticated, navigate])
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -26,11 +35,11 @@ export const Login = () => {
                 dispatch(loginSuccess({ token }))
                 navigate("/profile")
             } else {
-                alert("Erreur de connexion : " + data.message);
+                setErrorMessage("Login Error : " + data.message)
             }
         } catch (error) {
-            console.error("Error :", error);
-            alert("Erreur serveur.");
+            console.error("Error :", error)
+            setErrorMessage("Server Error.")
         }
     }
 
@@ -56,7 +65,7 @@ export const Login = () => {
                             >Remember me</label
                             >
                         </div>
-
+                        {errorMessage && <p className="error-message">{errorMessage}</p>}
                         <button className="sign-in-button">Sign In</button>
 
                     </form>

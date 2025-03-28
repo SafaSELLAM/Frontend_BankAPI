@@ -12,7 +12,7 @@ export const Header = () => {
     const [isEditing, setIsEditing] = useState(false)
     const [firstName, setFirstName] = useState(user?.firstName)
     const [lastName, setLastName] = useState(user?.lastName)
-
+    const [errorMessage, setErrorMessage] = useState("")
 
     const handleLogout = () => {
         dispatch(logout())
@@ -57,12 +57,17 @@ export const Header = () => {
 
     const handleEditClick = () => setIsEditing(true);
     const handleCancel = () => {
-        setFirstName(user?.firstName || "")
-        setLastName(user?.lastName || "")
+        setFirstName(user?.firstName)
+        setLastName(user?.lastName)
         setIsEditing(false)
+        setErrorMessage("")
     };
 
     const handleSave = async () => {
+        if (!firstName || !lastName) {
+            setErrorMessage("Both fields are required!")
+            return
+        }
 
         try {
             const response = await fetch("http://localhost:3001/api/v1/user/profile", {
@@ -84,6 +89,7 @@ export const Header = () => {
 
             dispatch(updateUser(updatedUser.body))
             setIsEditing(false)
+            setErrorMessage("")
 
         } catch (error) {
             console.error(error);
@@ -110,6 +116,7 @@ export const Header = () => {
                             placeholder="Last Name"
                         />
                     </div>
+                    {errorMessage && <p className="error-message">{errorMessage}</p>}
                     <div className="buttons">
                         <button className="edit-button edited" onClick={handleSave}>
                             Save
