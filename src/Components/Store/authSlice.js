@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// get token to maintain login even with refresh 
 const token = localStorage.getItem("token")
 
+// original state 
 const authSlice = createSlice({
     name: "auth",
     initialState: {
@@ -9,6 +11,7 @@ const authSlice = createSlice({
         isAuthenticated: !!token,
         user: null,
     },
+    // functions that modify the state 
     reducers: {
         loginSuccess: (state, action) => {
             state.token = action.payload.token;
